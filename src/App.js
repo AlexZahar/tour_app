@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { TourList } from "./components/tour-list/tour-list.component";
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      tours: [],
+      tourSearch: "",
+    };
+  }
+  componentDidMount() {
+    fetch(
+      "https://www.mydriver.com/api/v5/locations/autocomplete?searchString=muc"
+    )
+      .then((response) => response.json())
+      .then((tours) => {
+        console.log(tours);
+        this.setState({ tours: tours });
+      });
+  }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  render() {
+    const { tours, tourSearch } = this.state;
+
+    return (
+      <div className="App">
+        <h1>Munich Sightseeing</h1>
+        <TourList tours={tours}></TourList>
+      </div>
+    );
+  }
 }
 
 export default App;
