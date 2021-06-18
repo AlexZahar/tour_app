@@ -33,7 +33,7 @@ export const DEFAULT_TOURS_DATA = [
     label: "The iconic Allianz Arena",
     address: "Allianz Arena, Werner-Heisenberg-Allee, Munich, Germany",
     imageUrl:
-      "http://stadiumdb.com/pictures/stadiums/ger/allianz_arena/allianz_arena67.jpg",
+      "https://img.fcbayern.com/image/upload/cms/public/images/allianz-arena/wallpaper/wallpaper-12.jpg",
   },
   {
     id: "ChIJLWiif8x3nkcRZm0epRZWTCc",
