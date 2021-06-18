@@ -59,14 +59,13 @@ class App extends React.Component {
 
   calculateMinTime = (date) => {
     let isToday = moment(date).isSame(moment(), "day");
-
     if (isToday) {
       // Starting from the next tour
-      let nowAddOneHour = moment(new Date()).add({ minutes: 30 });
+      let nowAddOneHour = moment(new Date()).add({ minutes: 30 }).toDate();
       return nowAddOneHour;
     }
     // For the new dates, the tours will start from 6AM
-    return moment(date).startOf("day").add({ hours: 6 });
+    return moment(date).startOf("day").add({ hours: 6 }).toDate();
   };
   componentDidMount() {
     // fetch(
@@ -77,10 +76,7 @@ class App extends React.Component {
     //     console.log(tours);
     //   });
     this.setState(
-      {
-        tours: DEFAULT_TOURS_DATA,
-        minTime: this.calculateMinTime(new Date()),
-      },
+      { tours: DEFAULT_TOURS_DATA, minTime: this.calculateMinTime(new Date()) },
       () => console.log("DATA", this.state)
     );
     console.log("DATA", this.state.tours);
@@ -107,7 +103,14 @@ class App extends React.Component {
           maxTime={moment().endOf("day").toDate()} // set to 23:59 pm today
           withPortal
         />
-
+        <input
+          type="time"
+          id="appt"
+          name="appt"
+          min="1:00"
+          max="18:00"
+          required
+        />
         <h1>Munich Sightseeing</h1>
         <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
       </div>
