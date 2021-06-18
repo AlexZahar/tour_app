@@ -1,9 +1,13 @@
 import React from "react";
 import "./tour.style.scss";
 
-export const Tour = (props) => (
-  <div className="tour-container">
-    <h2> {props.tour.city} </h2>
-    <p>{props.tour.address}</p>
+export const Tour = ({ tour, handleTourPick }) => (
+  <div
+    className="tour-container image"
+    style={{ backgroundImage: `url(${tour.imageUrl})` }}
+    onClick={() => handleTourPick(tour.id)}
+  >
+    <h2> {tour.label} </h2>
+    <p>{tour.address}</p>
   </div>
 );
