@@ -5,6 +5,7 @@ import { SearchBox } from "./components/search-box/search-box.component";
 import { DEFAULT_TOURS_DATA } from "./assets/data/tours/default-tours.data";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import { CarOfferList } from "./components/car-offer-list/car-offer-list.component";
 
 import "react-datepicker/dist/react-datepicker.css";
 // import { Datepicker } from "./components/date-picker/date-picker.component";
@@ -36,24 +37,27 @@ class App extends React.Component {
       console.log("TOUR2", this.state.tourLabel)
     );
 
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     originPlaceId: tour.id,
-    //     selectedStartDate: this.state.startDate.toISOString(true),
-    //     duration: this.state.duration,
-    //     type: this.state.type,
-    //   }),
-    // };
-    // fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log("RESPONSE", data);
-    //     // this.setState({ offers: data }, () =>
-    //     //   console.log("OFFERS", this.state)
-    //     // );
-    //   });
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        originPlaceId: tour.id,
+        selectedStartDate: this.state.startDate.toISOString(true),
+        duration: this.state.duration,
+        type: this.state.type,
+      }),
+    };
+    fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("RESPONSE", data);
+        this.setState({ offers: data }, () =>
+          console.log("OFFERS", this.state.offers)
+        );
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
     // console.log();
   };
   handleDatePick = (date) => {
@@ -108,6 +112,7 @@ class App extends React.Component {
   render() {
     const {
       tours,
+      offers,
       tourSearch,
       startDate,
       tourLabel,
@@ -164,6 +169,7 @@ class App extends React.Component {
 
         <h3>Selected Tour {tourLabel} </h3>
         <h3>Tour Duration {duration / 60}h</h3>
+        <CarOfferList offers={offers} />
       </div>
     );
   }
