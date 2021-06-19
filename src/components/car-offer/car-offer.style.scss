@@ -1,0 +1,25 @@
+.offer__background {
+  display: flex;
+  flex-direction: column;
+  background-color: #95dada;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 25px;
+  height: 80px;
+  cursor: pointer;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 0.25s ease-out;
+}
+
+.offer__background:hover {
+  transform: scale(1.05);
+}
+.image {
+  // width: 100%;
+  // height: 95%;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 5px;
+}
