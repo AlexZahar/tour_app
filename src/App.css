@@ -27,7 +27,43 @@
 .App-link {
   color: #61dafb;
 }
+input {
+  height: 24px;
+  font-size: 16px;
+  text-align: center;
+  margin: 16px auto;
+  /* border-top: none;
+  border-left: none; */
+  /* border-right: none; */
+  border: none;
+  border-radius: 4px;
+  -webkit-box-shadow: 2px 7px 10px -3px rgba(0, 0, 0, 0.23);
+  box-shadow: 2px 7px 10px -3px rgba(0, 0, 0, 0.23);
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+.header {
+  display: flex;
+  width: 100%;
 
+  /* background-color: ; */
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: baseline;
+}
+.header__datepick,
+.header__duration {
+  display: flex;
+  align-items: center;
+}
+
+.header__action-info {
+  margin: 0 12px;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

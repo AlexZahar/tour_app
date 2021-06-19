@@ -117,8 +117,9 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <div className="navigation">
-          <div className="navigation__datepick">
+        <div className="header">
+          <div className="header__datepick">
+            <span className="header__action-info">Tour date</span>
             <DatePicker
               // isClearable
               closeOnScroll={true}
@@ -134,14 +135,18 @@ class App extends React.Component {
               minTime={this.state.minTime}
               maxTime={moment().endOf("day").toDate()} // set to 23:59 pm today
               withPortal
+              required
             />
           </div>
-          <div className="navigation__duration">
+          <div className="header__duration">
+            <span className="header__action-info">Duration</span>
             <input
               type="number"
               id="quantity"
               name="quantity"
               min="1"
+              required
+              placeholder="1h"
               step="0.1"
               max="10"
               onChange={(duration) =>
