@@ -18,50 +18,69 @@ class App extends React.Component {
       tourSearch: "",
       originPlaceId: "",
       selectedStartDate: "2021-11-22T12:45:00+02:00",
-      duration: "200",
+      duration: "",
       type: "DURATION",
       startDate: new Date(),
       minTime: "",
+      minDate: "",
+      tourLabel: "",
+      isTourPicked: false,
     };
   }
   // handleChange = (e) => {
   //   this.setState({ searchField: e.target.value });
   // };
-  handleTourPick = (id) => {
+  handleTourPick = (tour) => {
     // console.log("Trigger", id);
-    // this.setState({ pickedTourId: id }, () => console.log("DATA", this.state));
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        originPlaceId: id,
-        selectedStartDate: this.state.selectedStartDate,
-        duration: this.state.duration,
-        type: this.state.type,
-      }),
-    };
-    fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("RESPONSE", data);
-        // this.setState({ offers: data }, () =>
-        //   console.log("OFFERS", this.state)
-        // );
-      });
-    console.log();
+    this.setState({ pickedTourId: tour.id, tourLabel: tour.label }, () =>
+      console.log("TOUR2", this.state.tourLabel)
+    );
+
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     originPlaceId: tour.id,
+    //     selectedStartDate: this.state.startDate.toISOString(true),
+    //     duration: this.state.duration,
+    //     type: this.state.type,
+    //   }),
+    // };
+    // fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("RESPONSE", data);
+    //     // this.setState({ offers: data }, () =>
+    //     //   console.log("OFFERS", this.state)
+    //     // );
+    //   });
+    // console.log();
   };
   handleDatePick = (date) => {
     this.setState(
-      { startDate: date, minTime: this.calculateMinTime(date) },
+      {
+        startDate: date,
+        minTime: this.calculateMinTime(date),
+        minDate: date,
+      },
       () => console.log("Datepick", this.state)
     );
   };
-
+  handleTourDuration = (duration) => {
+    console.log("DURATION", duration);
+    // converting the user input from hours in minutes
+    this.setState(
+      {
+        duration: duration * 60,
+      },
+      () => console.log("Duration", this.state.duration)
+    );
+  };
   calculateMinTime = (date) => {
     let isToday = moment(date).isSame(moment(), "day");
     if (isToday) {
-      // Starting from the next tour
-      let nowAddOneHour = moment(new Date()).add({ minutes: 30 }).toDate();
+      //To avoid "tooEarlyBookingTime" the closest tour can be picked at a difference of 6 hours from the users current time
+      let nowAddOneHour = moment(new Date()).add({ hours: 6 }).toDate();
       return nowAddOneHour;
     }
     // For the new dates, the tours will start from 6AM
@@ -76,43 +95,70 @@ class App extends React.Component {
     //     console.log(tours);
     //   });
     this.setState(
-      { tours: DEFAULT_TOURS_DATA, minTime: this.calculateMinTime(new Date()) },
+      {
+        tours: DEFAULT_TOURS_DATA,
+        minTime: this.calculateMinTime(new Date()),
+        minDate: moment(new Date()).add({ hours: 6 }).toDate(),
+      },
       () => console.log("DATA", this.state)
     );
     console.log("DATA", this.state.tours);
   }
 
   render() {
-    const { tours, tourSearch, startDate } = this.state;
+    const {
+      tours,
+      tourSearch,
+      startDate,
+      tourLabel,
+      isTourPicked,
+      duration,
+    } = this.state;
 
     return (
       <div className="App">
-        <DatePicker
-          // isClearable
-          closeOnScroll={true}
-          dateFormat="dd.MM.yyyy - HH:mm"
-          placeholderText="Pick your tour date"
-          selected={startDate}
-          onChange={(date) => this.handleDatePick(date)}
-          style={{ border: "solid 1px pink" }}
-          showTimeSelect
-          timeFormat="HH:mm"
-          excludeOutOfBoundsTimes
-          minDate={new Date()}
-          minTime={this.state.minTime}
-          maxTime={moment().endOf("day").toDate()} // set to 23:59 pm today
-          withPortal
-        />
-        <input
-          type="time"
-          id="appt"
-          name="appt"
-          min="1:00"
-          max="18:00"
-          required
-        />
+        <div className="navigation">
+          <div className="navigation__datepick">
+            <DatePicker
+              // isClearable
+              closeOnScroll={true}
+              dateFormat="dd.MM.yyyy - HH:mm"
+              placeholderText="Pick your tour date"
+              selected={this.state.minDate}
+              onChange={(date) => this.handleDatePick(date)}
+              style={{ border: "solid 1px pink" }}
+              showTimeSelect
+              timeFormat="HH:mm"
+              excludeOutOfBoundsTimes
+              minDate={moment(new Date()).add({ hours: 6 }).toDate()}
+              minTime={this.state.minTime}
+              maxTime={moment().endOf("day").toDate()} // set to 23:59 pm today
+              withPortal
+            />
+          </div>
+          <div className="navigation__duration">
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              step="0.1"
+              max="10"
+              onChange={(duration) =>
+                this.handleTourDuration(duration.target.value)
+              }
+            />
+          </div>
+        </div>
         <h1>Munich Sightseeing</h1>
         <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
+        <h3>
+          Date and time of the sighseeing:{" "}
+          {moment(startDate).format("DD.MM.YYYY - HH:mm")}
+        </h3>
+
+        <h3>Selected Tour {tourLabel} </h3>
+        <h3>Tour Duration {duration / 60}h</h3>
       </div>
     );
   }
