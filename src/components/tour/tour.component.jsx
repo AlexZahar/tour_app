@@ -10,7 +10,9 @@ export const Tour = ({ tour, handleTourPick }) => (
       console.log("tour", tour);
     }}
   >
-    <h2> {tour.label} </h2>
-    <p>{tour.address}</p>
+    <div className="tour-details">
+      <h2> {tour.label} </h2>
+      <p>{tour.address}</p>
+    </div>
   </div>
 );

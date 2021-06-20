@@ -1,0 +1,20 @@
+.offer-list {
+  max-width: 900px;
+  // width: 100%;
+  margin: 32px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+@media only screen and (max-width: 840px) {
+  .offer-list {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .offer-list {
+    grid-template-columns: 1fr;
+  }
+}

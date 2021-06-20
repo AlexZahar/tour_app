@@ -6,7 +6,7 @@ export const TourList = ({ tours, handleTourPick }) => {
   return (
     <div className="card-list">
       {tours.map((tour) => (
-        <Tour key={tour.id} tour={tour} handleTourPick={handleTourPick} />
+        <Tour key={tour.placeId} tour={tour} handleTourPick={handleTourPick} />
       ))}
     </div>
   );

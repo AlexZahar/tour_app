@@ -1,7 +1,27 @@
 .card-list {
-  width: 85vw;
+  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 20px;
+}
+
+.image {
+  // width: 100%;
+  // height: 95%;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 800px) {
+  .card-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media only screen and (max-width: 640px) {
+  .card-list {
+    grid-template-columns: 1fr;
+  }
 }

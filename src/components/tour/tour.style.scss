@@ -1,24 +1,53 @@
-.tour-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #95dada;
-  border: 1px solid grey;
-  border-radius: 5px;
-  padding: 25px;
-  cursor: pointer;
-  -moz-osx-font-smoothing: grayscale;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-  transition: transform 0.25s ease-out;
+.tour {
+  &-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #39dbbb;
+    height: 260px;
+    border-radius: 5px;
+    padding: 25px;
+    cursor: pointer;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    transition: transform 0.25s ease-out;
 
-  &:hover {
-    transform: scale(1.05);
+    &:hover {
+      transform: scale(1.05);
+    }
+    .image {
+      // width: 100%;
+      // height: 95%;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 5px;
+    }
   }
-  .image {
-    // width: 100%;
-    // height: 95%;
-    background-size: cover;
-    background-position: center;
-    margin-bottom: 5px;
+}
+.tour-details {
+  // font-size: 200px;
+  // display: block;
+  font-size: 14px;
+  letter-spacing: 1px;
+  line-height: 22px;
+  background-color: rgba($color: #ffffff, $alpha: 0.7);
+  border-radius: 5px;
+  z-index: 10;
+  width: 100%;
+  // height: 100%;
+}
+
+@media only screen and (max-width: 800px) {
+  .tour-container {
+    height: 240px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .tour-container {
+    height: 140px;
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
   }
 }

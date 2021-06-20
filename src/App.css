@@ -55,8 +55,13 @@ a {
 .header {
   display: flex;
   width: 100%;
+  background-image: linear-gradient(
+    to right bottom,
+    rgba(#39dbbb, 1),
+    rgba(#cbfff5, 1)
+  );
 
-  /* background-color: ; */
+  /* background-color: #39dbbb; */
   flex-direction: row;
   justify-content: space-evenly;
   align-items: baseline;
@@ -76,5 +81,11 @@ a {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media only screen and (max-width: 540px) {
+  .header {
+    flex-direction: column;
   }
 }

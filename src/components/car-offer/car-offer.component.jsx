@@ -11,7 +11,7 @@ function currencyFormat(number) {
 export const CarOffer = ({ offer }) => (
   <div className="offer-container">
     <div
-      className="offer__background image"
+      className="offer__background offer-image"
       style={{ backgroundImage: `url(${offer.vehicleType.images.native})` }}
     ></div>
     <p>{offer.vehicleType.title}</p>

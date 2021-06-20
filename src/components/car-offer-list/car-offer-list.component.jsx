@@ -4,7 +4,7 @@ import { CarOffer } from "../car-offer/car-offer.component";
 
 export const CarOfferList = ({ offers, handleOfferPick }) => {
   return (
-    <div className="card-list">
+    <div className="offer-list">
       {offers.length
         ? offers.map((offer) => (
             <CarOffer
