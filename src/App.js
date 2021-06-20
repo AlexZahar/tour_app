@@ -53,14 +53,29 @@ class App extends React.Component {
     );
   };
 
-  handleTourDuration = (duration) => {
-    // console.log("DURATION", duration);
-    console.log("Duration state", this.state.isDurationPicked);
-    // converting the user input from hours in minutes
-    if (duration >= 1 && duration <= 10) {
+  handleTourDuration = (e) => {
+    console.log("TYPEOF", typeof e.target.value);
+    console.log("DURATION", this.state.duration);
+    const duration = e.target.value;
+    if (duration === "") {
       this.setState({
-        duration: duration * 60,
+        duration: "",
         isDurationPicked: true,
+      });
+    }
+    console.log("PARSE INT", parseInt(duration));
+    console.log("PARSE FLOAT", parseFloat(duration));
+    // converting the user input from hours in minutes
+    if (parseFloat(duration) >= 1) {
+      this.setState({
+        duration: duration,
+        isDurationPicked: true,
+      });
+    } else if (parseFloat(duration) > 10) {
+      console.log("HEREE");
+      this.setState({
+        duration: "10",
+        isDurationPicked: false,
       });
     } else {
       this.setState({
@@ -68,25 +83,6 @@ class App extends React.Component {
       });
       return;
     }
-    // switch (duration) {
-    //   case duration >= 1:
-    //     this.setState({
-    //       duration: duration * 60,
-    //       isDurationPicked: true,
-    //     });
-    //     break;
-    //   case duration > 10:
-    //     alert("Maximum booking time is 10 hours!");
-    //     this.setState({
-    //       isDurationPicked: false,
-    //     });
-
-    //     break;
-    //   default:
-    //     this.setState({
-    //       isDurationPicked: false,
-    //     });
-    // }
   };
   handleSubmit = async (event) => {
     console.log("event", event.target);
@@ -113,7 +109,7 @@ class App extends React.Component {
       body: JSON.stringify({
         originPlaceId: this.state.originPlaceId,
         selectedStartDate: this.state.startDate.toISOString(true),
-        duration: this.state.duration,
+        duration: this.state.duration * 60,
         type: this.state.type,
       }),
     };
@@ -149,13 +145,6 @@ class App extends React.Component {
     return moment(date).startOf("day").add({ hours: 6 }).toDate();
   };
   componentDidMount() {
-    // fetch(
-    //   "https://www.mydriver.com/api/v5/locations/autocomplete?searchString=Nymphenburg"
-    // )
-    //   .then((response) => response.json())
-    //   .then((tours) => {
-    //     console.log(tours);
-    //   });
     this.setState(
       {
         tours: DEFAULT_TOURS_DATA,
@@ -163,6 +152,7 @@ class App extends React.Component {
         minDate: moment(new Date()).add({ hours: 4 }).toDate(),
         startDate: moment(new Date()).add({ hours: 4 }).toDate(),
         isFormSubmitted: false,
+        duration: "1",
       },
       () => console.log("DATA", this.state)
     );
@@ -213,12 +203,11 @@ class App extends React.Component {
                 required
                 placeholder="hour"
                 label="1"
+                value={this.state.duration}
                 step="0.1"
                 max="10"
-                className={this.state.isDurationPicked ? "" : "error"}
-                onChange={(duration) =>
-                  this.handleTourDuration(duration.target.value)
-                }
+                className={this.state.duration ? "" : "error"}
+                onChange={this.handleTourDuration}
               />
             </div>
           </div>
@@ -228,8 +217,13 @@ class App extends React.Component {
         <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
         <h3>Date and time: {moment(startDate).format("DD.MM.YYYY - HH:mm")}</h3>
         <h3>Tour: {tourLabel} </h3>
-        <h3>Duration: {`${duration ? duration / 60 + "h" : ""}`}</h3>
-        <button type="submit" onClick={this.handleSubmit}>
+        <h3>Duration: {`${duration ? duration + "h" : ""}`}</h3>
+        <button
+          type="submit"
+          onClick={this.handleSubmit}
+          onKeyUp={this.handleSubmit}
+          disabled={this.state.duration.length < 1 || !isTourPicked}
+        >
           Get offers
         </button>
         {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
