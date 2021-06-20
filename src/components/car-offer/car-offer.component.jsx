@@ -8,8 +8,14 @@ function currencyFormat(number) {
   }).format(number / 100);
 }
 
-export const CarOffer = ({ offer }) => (
-  <div className="offer offer-container">
+export const CarOffer = ({ offer, handleOfferPick }) => (
+  <div
+    className="offer offer-container"
+    onClick={() => {
+      handleOfferPick(offer);
+      console.log("offer", offer);
+    }}
+  >
     <div
       className="offer__background offer-image"
       style={{ backgroundImage: `url(${offer.vehicleType.images.native})` }}

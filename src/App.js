@@ -40,9 +40,12 @@ class App extends React.Component {
       isTourPicked: false,
       isDurationPicked: false,
       isFormSubmitted: false,
+      isOfferPicked: false,
       isLoading: true,
       spinnerColor: "#39DBBB",
       address: "",
+      offerName: "",
+      offerPrice: "",
     };
   }
 
@@ -94,9 +97,22 @@ class App extends React.Component {
       isTourPicked: true,
       offers: [],
       address: tour.address,
+      isOfferPicked: false,
     });
   };
+  handleOfferPick = (offer) => {
+    console.log("PICKED", offer);
+    this.setState({
+      offerName: offer.vehicleType.name,
+      offerPrice: offer.amount,
+      isOfferPicked: true,
+    });
 
+    this.scrollToBottom();
+  };
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  };
   handleDatePick = (date) => {
     this.setState({
       startDate: date,
@@ -218,6 +234,7 @@ class App extends React.Component {
       isFormSubmitted: false,
       duration: "1",
       isLoading: false,
+      isOfferPicked: false,
     });
     // console.log("DATA", this.state.tours);
   }
@@ -241,6 +258,9 @@ class App extends React.Component {
       isLoading,
       searchInput,
       address,
+      offerName,
+      offerPrice,
+      isOfferPicked,
     } = this.state;
 
     return (
@@ -325,17 +345,31 @@ class App extends React.Component {
             Check offers
           </button>
         ) : null}
-        {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
-        {isTourPicked && !isLoading ? (
+        {this.state.isFormSubmitted ? (
+          <CarOfferList
+            offers={offers}
+            handleOfferPick={this.handleOfferPick}
+          />
+        ) : null}
+        {isTourPicked && !isLoading && isOfferPicked ? (
           <TourDetails
             startDate={startDate}
             isTourPicked={isTourPicked}
             tourLabel={tourLabel}
             duration={duration}
             address={address}
+            offerName={offerName}
+            offerPrice={offerPrice}
             handleSubmit={this.handleSubmit}
           ></TourDetails>
         ) : null}
+        <div
+          ref={(el) => {
+            this.messagesEnd = el;
+          }}
+        >
+          {" "}
+        </div>
       </div>
     );
   }
