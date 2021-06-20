@@ -91,6 +91,7 @@ class App extends React.Component {
       originPlaceId: tour.placeId,
       tourLabel: tour.label,
       isTourPicked: true,
+      offers: [],
     });
   };
 
