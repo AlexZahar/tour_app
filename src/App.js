@@ -6,7 +6,7 @@ import { DEFAULT_TOURS_DATA } from "./assets/data/tours/default-tours.data";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import { CarOfferList } from "./components/car-offer-list/car-offer-list.component";
-
+import { TourDetails } from "./components/tour-details/tour-details.component";
 import "react-datepicker/dist/react-datepicker.css";
 // import { Datepicker } from "./components/date-picker/date-picker.component";
 
@@ -176,7 +176,7 @@ class App extends React.Component {
         <form className="sign-up-form" onSubmit={this.handleSubmit}>
           <div className="header">
             <div className="header__datepick">
-              <label className="header__action-info">Tour date</label>
+              <label className="header__action-info">Next tour date</label>
               <DatePicker
                 // isClearable
                 closeOnScroll={false}
@@ -221,18 +221,16 @@ class App extends React.Component {
         </form>
 
         <h1>Munich Sightseeing</h1>
+        <h3>Pick up one of the default tours or search for a new one</h3>
+
         <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
-        <h3>Date and time: {moment(startDate).format("DD.MM.YYYY - HH:mm")}</h3>
-        <h3>Tour: {tourLabel} </h3>
-        <h3>Duration: {`${duration ? duration + "h" : ""}`}</h3>
-        <button
-          type="submit"
-          onClick={this.handleSubmit}
-          onKeyUp={this.handleSubmit}
-          disabled={this.state.duration < 1 || !isTourPicked}
-        >
-          Get offers
-        </button>
+        <TourDetails
+          startDate={startDate}
+          isTourPicked={isTourPicked}
+          tourLabel={tourLabel}
+          duration={duration}
+          handleSubmit={this.handleSubmit}
+        ></TourDetails>
         {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
       </div>
     );
