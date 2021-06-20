@@ -28,7 +28,7 @@ class App extends React.Component {
     this.state = {
       tours: [],
       offers: [],
-      tourSearch: "",
+      searchInput: "",
       originPlaceId: "",
       selectedStartDate: "2021-11-22T12:45:00+02:00",
       duration: "",
@@ -47,7 +47,12 @@ class App extends React.Component {
 
   handleSearch = (e) => {
     if (e.target.value.length) {
-      this.setState({ isLoading: true, offers: [], isTourPicked: false });
+      this.setState({
+        isLoading: true,
+        offers: [],
+        isTourPicked: false,
+        searchInput: e.target.value,
+      });
       fetch(
         `https://www.mydriver.com/api/v5/locations/autocomplete?searchString=${e.target.value}`
       )
@@ -65,11 +70,17 @@ class App extends React.Component {
               tours: munichLocations,
               isLoading: false,
             });
+          } else {
+            this.setState({
+              isLoading: false,
+              tours: DEFAULT_TOURS_DATA,
+            });
           }
         });
     } else {
       this.setState({
         tours: DEFAULT_TOURS_DATA,
+        searchInput: "",
       });
     }
   };
@@ -229,6 +240,7 @@ class App extends React.Component {
       isTourPicked,
       spinnerColor,
       isLoading,
+      searchInput,
     } = this.state;
 
     return (
@@ -294,6 +306,9 @@ class App extends React.Component {
             tours={tours}
             handleTourPick={this.handleTourPick}
           ></TourList>
+        ) : null}
+        {!isLoading && !tours.length ? (
+          <h4>Nothing found in Munich to match your search: {searchInput}</h4>
         ) : null}
         {isTourPicked && !isLoading ? (
           <TourDetails

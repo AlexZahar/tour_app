@@ -7,5 +7,6 @@ export const SearchBox = ({ placeholder, handleSearch }) => (
     type="search"
     placeholder="Search tour"
     onChange={handleSearch}
+    id="Search"
   />
 );
