@@ -9,13 +9,27 @@ function currencyFormat(number) {
 }
 
 export const CarOffer = ({ offer }) => (
-  <div className="offer-container">
+  <div className="offer offer-container">
     <div
       className="offer__background offer-image"
       style={{ backgroundImage: `url(${offer.vehicleType.images.native})` }}
     ></div>
-    <p>{offer.vehicleType.title}</p>
-    <p>{offer.vehicleType.class}</p>
-    <p> {currencyFormat(offer.amount)}</p>
+    <div className="offer__data">
+      <span>
+        Name: <strong> {offer.vehicleType.name}</strong>
+      </span>
+      <span>
+        Class: <strong> {offer.vehicleType.class}</strong>
+      </span>
+      <span>
+        Passengers: <strong>{offer.vehicleType.nrOfPassengers} </strong>
+      </span>
+      <span>
+        Baggage: <strong> {offer.vehicleType.nrOfBaggage}</strong>
+      </span>
+      <span>
+        Price: <strong> {currencyFormat(offer.amount)}</strong>
+      </span>
+    </div>
   </div>
 );
