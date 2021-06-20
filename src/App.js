@@ -26,6 +26,8 @@ class App extends React.Component {
       minDate: "",
       tourLabel: "",
       isTourPicked: false,
+      isDurationPicked: false,
+      isFormSubmitted: false,
     };
   }
   // handleChange = (e) => {
@@ -33,33 +35,13 @@ class App extends React.Component {
   // };
   handleTourPick = (tour) => {
     // console.log("Trigger", id);
-    this.setState({ pickedTourId: tour.id, tourLabel: tour.label }, () =>
-      console.log("TOUR2", this.state.tourLabel)
-    );
-
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        originPlaceId: tour.id,
-        selectedStartDate: this.state.startDate.toISOString(true),
-        duration: this.state.duration,
-        type: this.state.type,
-      }),
-    };
-    fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("RESPONSE", data);
-        this.setState({ offers: data }, () =>
-          console.log("OFFERS", this.state.offers)
-        );
-      })
-      .catch((err) => {
-        console.warn(err);
-      });
-    // console.log();
+    this.setState({
+      originPlaceId: tour.id,
+      tourLabel: tour.label,
+      isTourPicked: true,
+    });
   };
+
   handleDatePick = (date) => {
     this.setState(
       {
@@ -70,24 +52,91 @@ class App extends React.Component {
       () => console.log("Datepick", this.state)
     );
   };
+
   handleTourDuration = (duration) => {
-    console.log("DURATION", duration);
+    // console.log("DURATION", duration);
+    console.log("Duration state", this.state.isDurationPicked);
     // converting the user input from hours in minutes
-    this.setState(
-      {
+    if (duration >= 1 && duration <= 10) {
+      this.setState({
         duration: duration * 60,
-      },
-      () => console.log("Duration", this.state.duration)
-    );
+        isDurationPicked: true,
+      });
+    } else {
+      this.setState({
+        isDurationPicked: false,
+      });
+      return;
+    }
+    // switch (duration) {
+    //   case duration >= 1:
+    //     this.setState({
+    //       duration: duration * 60,
+    //       isDurationPicked: true,
+    //     });
+    //     break;
+    //   case duration > 10:
+    //     alert("Maximum booking time is 10 hours!");
+    //     this.setState({
+    //       isDurationPicked: false,
+    //     });
+
+    //     break;
+    //   default:
+    //     this.setState({
+    //       isDurationPicked: false,
+    //     });
+    // }
+  };
+  handleSubmit = async (event) => {
+    console.log("event", event.target);
+    event.preventDefault();
+    // const { tour } = this.state;
+
+    if (!this.state.duration) {
+      alert("Pick the tour duration");
+      return;
+    }
+    console.log("this.state.duration", this.state.duration);
+    if (this.state.duration > 10 * 60) {
+      alert("Maximum booking time is 10 hours!");
+      return;
+    }
+    if (!this.state.isTourPicked) {
+      alert("Choose a tour!");
+      return;
+    }
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        originPlaceId: this.state.originPlaceId,
+        selectedStartDate: this.state.startDate.toISOString(true),
+        duration: this.state.duration,
+        type: this.state.type,
+      }),
+    };
+
+    fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("RESPONSE", data);
+
+        this.setState({ offers: data, isFormSubmitted: true });
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
   };
   calculateMinTime = (date) => {
     let isToday = moment(date).isSame(moment(), "day");
     if (isToday) {
-      //To avoid "tooEarlyBookingTime" the closest tour can be picked at a difference of 6 hours from the users current time
-      let nowAddOneHour = moment(new Date()).add({ hours: 6 }).toDate();
-      return nowAddOneHour;
+      //To avoid "tooEarlyBookingTime" the closest tour can be picked at a difference of 4 hours from the users current time
+      let nowAddHours = moment(new Date()).add({ hours: 4 }).toDate();
+      return nowAddHours;
     }
-    // For the new dates, the tours will start from 6AM
+    // For the new dates, the tours will start from 6AM until end of day
     return moment(date).startOf("day").add({ hours: 6 }).toDate();
   };
   componentDidMount() {
@@ -102,7 +151,9 @@ class App extends React.Component {
       {
         tours: DEFAULT_TOURS_DATA,
         minTime: this.calculateMinTime(new Date()),
-        minDate: moment(new Date()).add({ hours: 6 }).toDate(),
+        minDate: moment(new Date()).add({ hours: 4 }).toDate(),
+        startDate: moment(new Date()).add({ hours: 4 }).toDate(),
+        isFormSubmitted: false,
       },
       () => console.log("DATA", this.state)
     );
@@ -113,63 +164,66 @@ class App extends React.Component {
     const {
       tours,
       offers,
-      tourSearch,
       startDate,
       tourLabel,
-      isTourPicked,
       duration,
+      isTourPicked,
     } = this.state;
 
     return (
       <div className="App">
-        <div className="header">
-          <div className="header__datepick">
-            <span className="header__action-info">Tour date</span>
-            <DatePicker
-              // isClearable
-              closeOnScroll={true}
-              dateFormat="dd.MM.yyyy - HH:mm"
-              placeholderText="Pick your tour date"
-              selected={this.state.minDate}
-              onChange={(date) => this.handleDatePick(date)}
-              style={{ border: "solid 1px pink" }}
-              showTimeSelect
-              timeFormat="HH:mm"
-              excludeOutOfBoundsTimes
-              minDate={moment(new Date()).add({ hours: 6 }).toDate()}
-              minTime={this.state.minTime}
-              maxTime={moment().endOf("day").toDate()} // set to 23:59 pm today
-              withPortal
-              required
-            />
+        <form className="sign-up-form" onSubmit={this.handleSubmit}>
+          <div className="header">
+            <div className="header__datepick">
+              <label className="header__action-info">Tour date</label>
+              <DatePicker
+                // isClearable
+                closeOnScroll={false}
+                dateFormat="dd.MM.yyyy - HH:mm"
+                placeholderText="Pick your tour date"
+                selected={this.state.minDate}
+                onChange={(date) => this.handleDatePick(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                excludeOutOfBoundsTimes
+                minDate={moment(new Date()).add({ hours: 4 }).toDate()}
+                minTime={this.state.minTime}
+                maxTime={moment().endOf("day").toDate()} // set to 23:59 pm today
+                withPortal
+                className={this.state.startDate ? "" : "error"}
+                required
+              />
+            </div>
+            <div className="header__duration">
+              <label className="header__action-info">Duration</label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                required
+                placeholder="hour"
+                label="1"
+                step="0.1"
+                max="10"
+                className={this.state.isDurationPicked ? "" : "error"}
+                onChange={(duration) =>
+                  this.handleTourDuration(duration.target.value)
+                }
+              />
+            </div>
           </div>
-          <div className="header__duration">
-            <span className="header__action-info">Duration</span>
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              min="1"
-              required
-              placeholder="1h"
-              step="0.1"
-              max="10"
-              onChange={(duration) =>
-                this.handleTourDuration(duration.target.value)
-              }
-            />
-          </div>
-        </div>
+        </form>
+
         <h1>Munich Sightseeing</h1>
         <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
-        <h3>
-          Date and time of the sighseeing:{" "}
-          {moment(startDate).format("DD.MM.YYYY - HH:mm")}
-        </h3>
-
-        <h3>Selected Tour {tourLabel} </h3>
-        <h3>Tour Duration {duration / 60}h</h3>
-        <CarOfferList offers={offers} />
+        <h3>Date and time: {moment(startDate).format("DD.MM.YYYY - HH:mm")}</h3>
+        <h3>Tour: {tourLabel} </h3>
+        <h3>Duration: {`${duration ? duration / 60 + "h" : ""}`}</h3>
+        <button type="submit" onClick={this.handleSubmit}>
+          Get offers
+        </button>
+        {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
       </div>
     );
   }

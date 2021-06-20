@@ -46,6 +46,9 @@ textarea:focus,
 button:focus {
   outline: none;
 }
+.error {
+  border: 1px solid #eb516d;
+}
 .header {
   display: flex;
   width: 100%;
