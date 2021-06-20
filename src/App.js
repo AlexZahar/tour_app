@@ -59,7 +59,7 @@ class App extends React.Component {
         .then((response) => response.json())
         .then((data) => {
           const munichLocations = [];
-          console.log(data);
+
           if (data.length) {
             data.forEach((e) => {
               if (e.city === "München") {
@@ -86,28 +86,20 @@ class App extends React.Component {
   };
   handleTourPick = (tour) => {
     // console.log("Trigger", id);
-    console.log("PICKED TOUR", tour);
-    this.setState(
-      {
-        originPlaceId: tour.placeId,
-        tourLabel: tour.label,
-        isTourPicked: true,
-      },
-      () => {
-        console.log("ORIGINPLACEID", this.state.originPlaceId);
-      }
-    );
+    // console.log("PICKED TOUR", tour);
+    this.setState({
+      originPlaceId: tour.placeId,
+      tourLabel: tour.label,
+      isTourPicked: true,
+    });
   };
 
   handleDatePick = (date) => {
-    this.setState(
-      {
-        startDate: date,
-        minTime: this.calculateMinTime(date),
-        minDate: date,
-      },
-      () => console.log("Datepick", this.state)
-    );
+    this.setState({
+      startDate: date,
+      minTime: this.calculateMinTime(date),
+      minDate: date,
+    });
   };
 
   handleTourDuration = (e) => {
@@ -154,7 +146,7 @@ class App extends React.Component {
       alert("ID undefined");
       return;
     }
-    console.log("this.state.duration", this.state.duration);
+    // console.log("this.state.duration", this.state.duration);
     if (parseFloat(this.state.duration) > 10) {
       // alert("Maximum booking time is 10 hours!");
       this.setState({ duration: "10" });
@@ -215,21 +207,25 @@ class App extends React.Component {
     return moment(date).startOf("day").add({ hours: 6 }).toDate();
   };
   componentDidMount() {
-    this.setState(
-      {
-        tours: DEFAULT_TOURS_DATA,
-        minTime: this.calculateMinTime(new Date()),
-        minDate: moment(new Date()).add({ hours: 4 }).toDate(),
-        startDate: moment(new Date()).add({ hours: 4 }).toDate(),
-        isFormSubmitted: false,
-        duration: "1",
-        isLoading: false,
-      },
-      () => console.log("DATA", this.state)
-    );
-    console.log("DATA", this.state.tours);
+    this.setState({
+      tours: DEFAULT_TOURS_DATA,
+      minTime: this.calculateMinTime(new Date()),
+      minDate: moment(new Date()).add({ hours: 4 }).toDate(),
+      startDate: moment(new Date()).add({ hours: 4 }).toDate(),
+      isFormSubmitted: false,
+      duration: "1",
+      isLoading: false,
+    });
+    // console.log("DATA", this.state.tours);
   }
 
+  handleShowDefaultTours = () => {
+    this.setState({
+      searchInput: "",
+      isLoading: false,
+      tours: DEFAULT_TOURS_DATA,
+    });
+  };
   render() {
     const {
       tours,
@@ -308,7 +304,12 @@ class App extends React.Component {
           ></TourList>
         ) : null}
         {!isLoading && !tours.length ? (
-          <h4>Nothing found in Munich to match your search: {searchInput}</h4>
+          <div>
+            <h4>Nothing found in Munich to match your search: {searchInput}</h4>
+            <a href="#" onClick={this.handleShowDefaultTours}>
+              Back to the default tours
+            </a>
+          </div>
         ) : null}
         {isTourPicked && !isLoading ? (
           <TourDetails
