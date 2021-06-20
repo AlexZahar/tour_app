@@ -54,8 +54,6 @@ class App extends React.Component {
   };
 
   handleTourDuration = (e) => {
-    console.log("TYPEOF", typeof e.target.value);
-    console.log("DURATION", this.state.duration);
     const duration = e.target.value;
     if (duration === "") {
       this.setState({
@@ -63,27 +61,30 @@ class App extends React.Component {
         isDurationPicked: true,
       });
     }
-    console.log("PARSE INT", parseInt(duration));
-    console.log("PARSE FLOAT", parseFloat(duration));
+
     // converting the user input from hours in minutes
-    if (parseFloat(duration) >= 1) {
+    if (parseFloat(duration) >= 1 && parseFloat(duration) <= 10) {
       this.setState({
         duration: duration,
         isDurationPicked: true,
       });
-    } else if (parseFloat(duration) > 10) {
-      console.log("HEREE");
+      return;
+    }
+    if (parseFloat(duration) > 10) {
       this.setState({
         duration: "10",
         isDurationPicked: false,
       });
-    } else {
-      this.setState({
-        isDurationPicked: false,
-      });
+      alert("tour duration can't be longer than 10 hours");
       return;
     }
+
+    this.setState({
+      isDurationPicked: false,
+    });
+    return;
   };
+
   handleSubmit = async (event) => {
     console.log("event", event.target);
     event.preventDefault();
@@ -94,8 +95,9 @@ class App extends React.Component {
       return;
     }
     console.log("this.state.duration", this.state.duration);
-    if (this.state.duration > 10 * 60) {
-      alert("Maximum booking time is 10 hours!");
+    if (parseFloat(this.state.duration) > 10) {
+      // alert("Maximum booking time is 10 hours!");
+      this.setState({ duration: "10" });
       return;
     }
     if (!this.state.isTourPicked) {
@@ -206,7 +208,12 @@ class App extends React.Component {
                 value={this.state.duration}
                 step="0.1"
                 max="10"
-                className={this.state.duration ? "" : "error"}
+                className={
+                  parseFloat(this.state.duration) >= 1 &&
+                  parseFloat(this.state.duration) <= 10
+                    ? ""
+                    : "error"
+                }
                 onChange={this.handleTourDuration}
               />
             </div>
@@ -222,7 +229,7 @@ class App extends React.Component {
           type="submit"
           onClick={this.handleSubmit}
           onKeyUp={this.handleSubmit}
-          disabled={this.state.duration.length < 1 || !isTourPicked}
+          disabled={this.state.duration < 1 || !isTourPicked}
         >
           Get offers
         </button>
