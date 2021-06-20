@@ -121,9 +121,18 @@ class App extends React.Component {
     fetch("https://www.mydriver.com/api/v5/offers", requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        console.log("RESPONSE", data);
-
-        this.setState({ offers: data, isFormSubmitted: true });
+        if (data.length) {
+          const premiumOffers = [];
+          data.forEach((offer) => {
+            if (offer.vehicleType.class === "Premium") {
+              premiumOffers.push(offer);
+            }
+          });
+          // console.log("Premium", premiumOffer);
+          this.setState({ offers: premiumOffers, isFormSubmitted: true });
+        } else {
+          this.setState({ offers: data, isFormSubmitted: true });
+        }
       })
       .catch((err) => {
         console.log("error", err);
@@ -195,7 +204,7 @@ class App extends React.Component {
               />
             </div>
             <div className="header__duration">
-              <label className="header__action-info">Duration</label>
+              <label className="header__action-info">Duration(h)</label>
               <input
                 type="number"
                 id="quantity"
