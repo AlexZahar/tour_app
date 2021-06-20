@@ -1,20 +1,28 @@
 .tour {
-  &__details-container {
-    margin: 60px auto;
-    height: 190px;
-    display: flex;
+  &__wrapper {
+    margin: 20px 30px;
     background-color: #39dbbb;
-    flex-direction: column;
-    line-height: 26px;
-    text-align: left;
-    justify-content: space-evenly;
     border-radius: 4px;
     -webkit-box-shadow: 2px 7px 11px -3px rgba(0, 0, 0, 0.43);
     box-shadow: 2px 7px 11px -3px rgba(0, 0, 0, 0.43);
+  }
+  &__details-container {
+    margin: 60px auto;
+    height: 290px;
+
+    display: flex;
+    flex-direction: column;
+    line-height: 26px;
+    text-align: left;
+    max-width: 400px;
+    justify-content: space-evenly;
+    border-radius: 4px;
+    word-wrap: break-word;
+    width: 100%;
 
     span {
+      max-width: 600px;
       width: 100%;
-      margin: 0 50px;
     }
   }
 }
