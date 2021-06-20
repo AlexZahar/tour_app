@@ -30,16 +30,47 @@ class App extends React.Component {
       isFormSubmitted: false,
     };
   }
-  // handleChange = (e) => {
-  //   this.setState({ searchField: e.target.value });
-  // };
+
+  handleSearch = (e) => {
+    if (e.target.value.length) {
+      fetch(
+        `https://www.mydriver.com/api/v5/locations/autocomplete?searchString=${e.target.value}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const munichLocations = [];
+          console.log(data);
+          if (data.length) {
+            data.forEach((e) => {
+              if (e.city === "München") {
+                munichLocations.push(e);
+              }
+            });
+            this.setState({
+              tours: munichLocations,
+            });
+          }
+          // console.log(munichLocations);
+        });
+    } else {
+      this.setState({
+        tours: DEFAULT_TOURS_DATA,
+      });
+    }
+  };
   handleTourPick = (tour) => {
     // console.log("Trigger", id);
-    this.setState({
-      originPlaceId: tour.id,
-      tourLabel: tour.label,
-      isTourPicked: true,
-    });
+    console.log("PICKED TOUR", tour);
+    this.setState(
+      {
+        originPlaceId: tour.placeId,
+        tourLabel: tour.label,
+        isTourPicked: true,
+      },
+      () => {
+        console.log("ORIGINPLACEID", this.state.originPlaceId);
+      }
+    );
   };
 
   handleDatePick = (date) => {
@@ -85,13 +116,18 @@ class App extends React.Component {
     return;
   };
 
-  handleSubmit = async (event) => {
+  handleSubmit = (event) => {
     console.log("event", event.target);
+    console.log("SUBMIT ACTION", this.state.originPlaceId);
     event.preventDefault();
     // const { tour } = this.state;
 
     if (!this.state.duration) {
       alert("Pick the tour duration");
+      return;
+    }
+    if (!this.state.originPlaceId) {
+      alert("ID undefined");
       return;
     }
     console.log("this.state.duration", this.state.duration);
@@ -222,15 +258,19 @@ class App extends React.Component {
 
         <h1>Munich Sightseeing</h1>
         <h3>Pick up one of the default tours or search for a new one</h3>
-
+        <SearchBox handleSearch={this.handleSearch}></SearchBox>
         <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
-        <TourDetails
-          startDate={startDate}
-          isTourPicked={isTourPicked}
-          tourLabel={tourLabel}
-          duration={duration}
-          handleSubmit={this.handleSubmit}
-        ></TourDetails>
+        {startDate || isTourPicked || duration ? (
+          <TourDetails
+            startDate={startDate}
+            isTourPicked={isTourPicked}
+            tourLabel={tourLabel}
+            duration={duration}
+            handleSubmit={this.handleSubmit}
+          ></TourDetails>
+        ) : (
+          ""
+        )}
         {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
       </div>
     );

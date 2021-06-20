@@ -1,13 +1,13 @@
 export const DEFAULT_TOURS_DATA = [
   {
-    id: "ChIJxfxSz4t1nkcRLxq9ze1wwak",
+    placeId: "ChIJxfxSz4t1nkcRLxq9ze1wwak",
     label: "The famous Munich Hofbr\u00E4uhaus",
     address: "Hofbr\u00E4uhaus München, Platzl, Munich, Germany",
     imageUrl:
       "https://cdn.getyourguide.com/img/location/53bffc406fce5-m1401980042.jpg/92.jpg",
   },
   {
-    id:
+    placeId:
       "EhtLYXJsc3BsLiwgTcO8bmNoZW4sIEdlcm1hbnkiLiosChQKEgkfRGon93WeRxEvZKuqIIsjnxIUChIJJ8yNql7fnUcRAKU5CaQlHQU",
     label: "Just in the city center: the Stachus",
     address: "Stachus, Munich, Germany",
@@ -15,28 +15,28 @@ export const DEFAULT_TOURS_DATA = [
       "https://www.munich.travel/var/ger_muc/storage/images/_aliases/stage_large/7/9/0/7/717097-11-eng-GB/Stachus-Panorama-foto-joerg-lutz.jpg",
   },
   {
-    id: "ChIJU-Q6JoF2nkcRdQApBoHVU8s",
+    placeId: "ChIJU-Q6JoF2nkcRdQApBoHVU8s",
     label: "The Olympic Tower",
     address: "Spiridon-Louis-Ring, Munich, Germany",
     imageUrl:
       "https://yourlocalfriend.tours/files/media/headerbilder/Walking_Tour_OlympicPark_Your-Local-Friend-Tours-Munich.jpg",
   },
   {
-    id: "ChIJayv4lZd1nkcR0e_vfGLfm8k",
+    placeId: "ChIJayv4lZd1nkcR0e_vfGLfm8k",
     label: "The beautiful English Garden",
     address: "Englischer Garten, Munich, Germany",
     imageUrl:
       "https://www.silverkris.com/wp-content/uploads/2018/07/Englischer-Garten.jpg",
   },
   {
-    id: "ChIJHyWKEoVznkcRI8QyjkJgTe0",
+    placeId: "ChIJHyWKEoVznkcRI8QyjkJgTe0",
     label: "The iconic Allianz Arena",
     address: "Allianz Arena, Werner-Heisenberg-Allee, Munich, Germany",
     imageUrl:
       "https://img.fcbayern.com/image/upload/cms/public/images/allianz-arena/wallpaper/wallpaper-12.jpg",
   },
   {
-    id: "ChIJLWiif8x3nkcRZm0epRZWTCc",
+    placeId: "ChIJLWiif8x3nkcRZm0epRZWTCc",
     label: "The impressive Nymphenburg Castle",
     address: "Schloss Nymphenburg, Schlo\u00DF Nymphenburg, Munich, Germany",
     imageUrl:
