@@ -9,6 +9,18 @@ import { CarOfferList } from "./components/car-offer-list/car-offer-list.compone
 import { TourDetails } from "./components/tour-details/tour-details.component";
 import "react-datepicker/dist/react-datepicker.css";
 // import { Datepicker } from "./components/date-picker/date-picker.component";
+import { css } from "@emotion/react";
+import RingLoader from "react-spinners/RingLoader";
+
+// Can be a string as well. Need to ensure each key-value pair ends with ;
+const override = css`
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+`;
 
 class App extends React.Component {
   constructor() {
@@ -28,11 +40,14 @@ class App extends React.Component {
       isTourPicked: false,
       isDurationPicked: false,
       isFormSubmitted: false,
+      isLoading: true,
+      spinnerColor: "#39DBBB",
     };
   }
 
   handleSearch = (e) => {
     if (e.target.value.length) {
+      this.setState({ isLoading: true, offers: [], isTourPicked: false });
       fetch(
         `https://www.mydriver.com/api/v5/locations/autocomplete?searchString=${e.target.value}`
       )
@@ -48,9 +63,9 @@ class App extends React.Component {
             });
             this.setState({
               tours: munichLocations,
+              isLoading: false,
             });
           }
-          // console.log(munichLocations);
         });
     } else {
       this.setState({
@@ -117,11 +132,9 @@ class App extends React.Component {
   };
 
   handleSubmit = (event) => {
-    console.log("event", event.target);
-    console.log("SUBMIT ACTION", this.state.originPlaceId);
     event.preventDefault();
     // const { tour } = this.state;
-
+    this.setState({ isLoading: true, offers: [] });
     if (!this.state.duration) {
       alert("Pick the tour duration");
       return;
@@ -163,9 +176,17 @@ class App extends React.Component {
             }
           });
           // console.log("Premium", premiumOffer);
-          this.setState({ offers: premiumOffers, isFormSubmitted: true });
+          this.setState({
+            offers: premiumOffers,
+            isFormSubmitted: true,
+            isLoading: false,
+          });
         } else {
-          this.setState({ offers: data, isFormSubmitted: true });
+          this.setState({
+            offers: data,
+            isFormSubmitted: true,
+            isLoading: false,
+          });
         }
       })
       .catch((err) => {
@@ -191,6 +212,7 @@ class App extends React.Component {
         startDate: moment(new Date()).add({ hours: 4 }).toDate(),
         isFormSubmitted: false,
         duration: "1",
+        isLoading: false,
       },
       () => console.log("DATA", this.state)
     );
@@ -205,6 +227,8 @@ class App extends React.Component {
       tourLabel,
       duration,
       isTourPicked,
+      spinnerColor,
+      isLoading,
     } = this.state;
 
     return (
@@ -259,8 +283,19 @@ class App extends React.Component {
         <h1>Munich Sightseeing</h1>
         <h3>Pick up one of the default tours or search for a new one</h3>
         <SearchBox handleSearch={this.handleSearch}></SearchBox>
-        <TourList tours={tours} handleTourPick={this.handleTourPick}></TourList>
-        {startDate || isTourPicked || duration ? (
+        <RingLoader
+          color={spinnerColor}
+          loading={isLoading}
+          css={override}
+          size={80}
+        />
+        {!isLoading ? (
+          <TourList
+            tours={tours}
+            handleTourPick={this.handleTourPick}
+          ></TourList>
+        ) : null}
+        {isTourPicked && !isLoading ? (
           <TourDetails
             startDate={startDate}
             isTourPicked={isTourPicked}
@@ -268,9 +303,7 @@ class App extends React.Component {
             duration={duration}
             handleSubmit={this.handleSubmit}
           ></TourDetails>
-        ) : (
-          ""
-        )}
+        ) : null}
         {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
       </div>
     );
