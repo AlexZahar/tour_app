@@ -75,6 +75,42 @@ a {
 .header__action-info {
   margin: 0 12px;
 }
+
+.btn {
+  font-size: 24px;
+  margin: 16px auto;
+  background-color: #fcfcfc;
+  border-radius: 5px;
+  -webkit-box-shadow: 2px 7px 12px -8px rgba(0, 0, 0, 0.23);
+  box-shadow: 2px 7px 12px -8px rgba(0, 0, 0, 0.23);
+  padding: 8px;
+  transition: all 0.2s;
+}
+.btn__get-offer {
+  border: 1px solid #07b363;
+  color: #07b363;
+}
+button:hover {
+  -webkit-box-shadow: 2px 7px 12px -1px rgba(0, 0, 0, 0.23);
+  box-shadow: 2px 7px 12px -1px rgba(0, 0, 0, 0.23);
+  transform: translateY(-3px);
+}
+button:disabled {
+  border: 1px solid red;
+  color: red;
+  transform: translateY(0px);
+  box-shadow: none;
+}
+button:focus {
+  transform: translateY(0px);
+}
+button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s;
+  transform: translateY(-3px);
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

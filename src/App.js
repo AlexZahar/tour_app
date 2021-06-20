@@ -42,6 +42,7 @@ class App extends React.Component {
       isFormSubmitted: false,
       isLoading: true,
       spinnerColor: "#39DBBB",
+      address: "",
     };
   }
 
@@ -92,6 +93,7 @@ class App extends React.Component {
       tourLabel: tour.label,
       isTourPicked: true,
       offers: [],
+      address: tour.address,
     });
   };
 
@@ -238,6 +240,7 @@ class App extends React.Component {
       spinnerColor,
       isLoading,
       searchInput,
+      address,
     } = this.state;
 
     return (
@@ -307,21 +310,32 @@ class App extends React.Component {
         {!isLoading && !tours.length ? (
           <div>
             <h4>Nothing found in Munich to match your search: {searchInput}</h4>
-            <a href="#" onClick={this.handleShowDefaultTours}>
+            <a href="/" onClick={this.handleShowDefaultTours}>
               Back to the default tours
             </a>
           </div>
         ) : null}
+        {!isLoading ? (
+          <button
+            type="submit"
+            className="btn btn__get-offer"
+            onClick={this.handleSubmit}
+            disabled={duration < 1 || !isTourPicked}
+          >
+            Check offers
+          </button>
+        ) : null}
+        {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
         {isTourPicked && !isLoading ? (
           <TourDetails
             startDate={startDate}
             isTourPicked={isTourPicked}
             tourLabel={tourLabel}
             duration={duration}
+            address={address}
             handleSubmit={this.handleSubmit}
           ></TourDetails>
         ) : null}
-        {this.state.isFormSubmitted ? <CarOfferList offers={offers} /> : null}
       </div>
     );
   }
