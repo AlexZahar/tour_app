@@ -15,12 +15,14 @@
     transform: translateZ(0);
   }
   &-image {
-    // width: 100%;
-    // height: 95%;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     margin-bottom: 5px;
+  }
+  .logo {
+    width: 100px;
+    margin-bottom: 20px;
   }
   &:hover {
     transform: scale(1.05);
@@ -31,16 +33,10 @@
     align-content: flex-start;
     text-align: left;
 
+    padding-left: 40px;
     span {
       line-height: 26px;
-      padding-left: 40px;
     }
-  }
-}
-
-@media only screen and (max-width: 840px) {
-  .offer__background {
-    // height: 240px;
   }
 }
 

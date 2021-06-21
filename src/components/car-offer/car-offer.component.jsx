@@ -21,6 +21,11 @@ export const CarOffer = ({ offer, handleOfferPick }) => (
       style={{ backgroundImage: `url(${offer.vehicleType.images.native})` }}
     ></div>
     <div className="offer__data">
+      <img
+        src={offer.vehicleType.logo.x1}
+        className="logo"
+        alt="Flowers in Chania"
+      />
       <span>
         Name: <strong> {offer.vehicleType.name}</strong>
       </span>

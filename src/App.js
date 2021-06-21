@@ -8,11 +8,10 @@ import moment from "moment";
 import { CarOfferList } from "./components/car-offer-list/car-offer-list.component";
 import { TourDetails } from "./components/tour-details/tour-details.component";
 import "react-datepicker/dist/react-datepicker.css";
-// import { Datepicker } from "./components/date-picker/date-picker.component";
 import { css } from "@emotion/react";
 import RingLoader from "react-spinners/RingLoader";
 
-// Can be a string as well. Need to ensure each key-value pair ends with ;
+// Loader CSS
 const override = css`
   display: block;
   position: absolute;
@@ -49,6 +48,7 @@ class App extends React.Component {
     };
   }
 
+  // Search logic implementation. Displays in real time the tour options, based on user's search input. These offers are filtered to include only the tours available in Munich
   handleSearch = (e) => {
     if (e.target.value.length) {
       this.setState({
@@ -88,9 +88,9 @@ class App extends React.Component {
       });
     }
   };
+
+  // Each time a tour is picked, the state is updated
   handleTourPick = (tour) => {
-    // console.log("Trigger", id);
-    // console.log("PICKED TOUR", tour);
     this.setState({
       originPlaceId: tour.placeId,
       tourLabel: tour.label,
@@ -100,6 +100,8 @@ class App extends React.Component {
       isOfferPicked: false,
     });
   };
+
+  // After picking an offer, the details component is updated to show valid data
   handleOfferPick = (offer) => {
     console.log("PICKED", offer);
     this.setState({
@@ -109,6 +111,12 @@ class App extends React.Component {
     });
     this.scrollToBottom();
   };
+  // Due to the increased size of the tours, the Tour details component is not noticebale after picking an offer. The user has to scroll manually, therefore I created this utility function
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Once the tour offer has been confirmed, the app comes back in it's initial state
   handleConfirmOffer = () => {
     this.setState({
       isLoading: true,
@@ -122,9 +130,8 @@ class App extends React.Component {
     }
     alert(`Thank you for booking the tour! Have a wonderfull time in Munich:)`);
   };
-  scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
-  };
+
+  // The nearest valid tour period will be picked by default, based on the user current time. The date and time can be freely chosen by the user but with slight restrictions
   handleDatePick = (date) => {
     this.setState({
       startDate: date,
@@ -133,6 +140,7 @@ class App extends React.Component {
     });
   };
 
+  // Tour duration logic. The duration can't be less than 1 hour or greater than 10 hours
   handleTourDuration = (e) => {
     const duration = e.target.value;
     if (duration === "") {
@@ -142,7 +150,6 @@ class App extends React.Component {
       });
     }
 
-    // converting the user input from hours in minutes
     if (parseFloat(duration) >= 1 && parseFloat(duration) <= 10) {
       this.setState({
         duration: duration,
@@ -167,28 +174,11 @@ class App extends React.Component {
     return;
   };
 
+  // Once the user picked all the required data for the tour, then submit and get back the car offers
   handleSubmit = (event) => {
     event.preventDefault();
     // const { tour } = this.state;
     this.setState({ isLoading: true, offers: [] });
-    if (!this.state.duration) {
-      alert("Pick the tour duration");
-      return;
-    }
-    if (!this.state.originPlaceId) {
-      alert("ID undefined");
-      return;
-    }
-    // console.log("this.state.duration", this.state.duration);
-    if (parseFloat(this.state.duration) > 10) {
-      // alert("Maximum booking time is 10 hours!");
-      this.setState({ duration: "10" });
-      return;
-    }
-    if (!this.state.isTourPicked) {
-      alert("Choose a tour!");
-      return;
-    }
 
     const requestOptions = {
       method: "POST",
@@ -229,16 +219,19 @@ class App extends React.Component {
         console.log("error", err);
       });
   };
+
+  // Handle the tour time options
   calculateMinTime = (date) => {
     let isToday = moment(date).isSame(moment(), "day");
     if (isToday) {
-      //To avoid "tooEarlyBookingTime" the closest tour can be picked at a difference of 4 hours from the users current time
+      //To avoid "tooEarlyBookingTime" error, the closest tour can be picked at a difference of 3.5 hours from the users current time. I am going for a 4 hours mark
       let nowAddHours = moment(new Date()).add({ hours: 4 }).toDate();
       return nowAddHours;
     }
     // For the new dates, the tours will start from 6AM until end of day
     return moment(date).startOf("day").add({ hours: 6 }).toDate();
   };
+
   componentDidMount() {
     this.setState({
       tours: DEFAULT_TOURS_DATA,
@@ -250,9 +243,9 @@ class App extends React.Component {
       isLoading: false,
       isOfferPicked: false,
     });
-    // console.log("DATA", this.state.tours);
   }
 
+  // If you were not lucky in finding any new tours, come back any time to the default ones!
   handleShowDefaultTours = () => {
     this.setState({
       searchInput: "",
@@ -326,8 +319,8 @@ class App extends React.Component {
           </div>
         </form>
 
-        <h1>Munich Sightseeing</h1>
-        <h3>Pick up one of the default tours or search for a new one</h3>
+        <h1>Welcome to Munich!</h1>
+        <h3>Want to know more about this wonderfull city?</h3>
         <SearchBox handleSearch={this.handleSearch}></SearchBox>
         <RingLoader
           color={spinnerColor}
@@ -389,3 +382,5 @@ class App extends React.Component {
 }
 
 export default App;
+
+// I know... this component got quite large.The logic could have been splitted in a better way
