@@ -334,7 +334,7 @@ class App extends React.Component {
             handleTourPick={this.handleTourPick}
           ></TourList>
         ) : null}
-        {!isLoading && !tours.length && !isOfferPicked ? (
+        {!isLoading && !tours.length ? (
           <div>
             <h4>Nothing found in Munich to match your search: {searchInput}</h4>
             <a href="/" onClick={this.handleShowDefaultTours}>
