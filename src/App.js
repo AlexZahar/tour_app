@@ -118,17 +118,17 @@ class App extends React.Component {
 
   // Once the tour offer has been confirmed, the app comes back in it's initial state
   handleConfirmOffer = () => {
-    this.setState({
-      isLoading: true,
-    });
     if (window.confirm(`Are you sure you want to proceed?`)) {
       console.log("Offer confirmed");
       this.setState({
         isTourPicked: false,
         isLoading: false,
       });
+      alert(
+        `Thank you for booking the tour! Have a wonderfull time in Munich:)`
+      );
     }
-    alert(`Thank you for booking the tour! Have a wonderfull time in Munich:)`);
+    return;
   };
 
   // The nearest valid tour period will be picked by default, based on the user current time. The date and time can be freely chosen by the user but with slight restrictions
