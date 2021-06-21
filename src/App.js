@@ -46,6 +46,7 @@ class App extends React.Component {
       address: "",
       offerName: "",
       offerPrice: "",
+      isOfferConfirmed: false,
     };
   }
 
@@ -107,8 +108,10 @@ class App extends React.Component {
       offerPrice: offer.amount,
       isOfferPicked: true,
     });
-
     this.scrollToBottom();
+  };
+  handleConfirmOffer = () => {
+    console.log("Offer confirmed");
   };
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({ behavior: "smooth" });
@@ -135,6 +138,8 @@ class App extends React.Component {
       this.setState({
         duration: duration,
         isDurationPicked: true,
+        isOfferPicked: false,
+        isTourPicked: false,
       });
       return;
     }
@@ -327,7 +332,7 @@ class App extends React.Component {
             handleTourPick={this.handleTourPick}
           ></TourList>
         ) : null}
-        {!isLoading && !tours.length ? (
+        {!isLoading && !tours.length && !isOfferPicked ? (
           <div>
             <h4>Nothing found in Munich to match your search: {searchInput}</h4>
             <a href="/" onClick={this.handleShowDefaultTours}>
@@ -335,7 +340,7 @@ class App extends React.Component {
             </a>
           </div>
         ) : null}
-        {!isLoading ? (
+        {!isLoading && isTourPicked ? (
           <button
             type="submit"
             className="btn btn__get-offer"
@@ -345,7 +350,7 @@ class App extends React.Component {
             Check offers
           </button>
         ) : null}
-        {this.state.isFormSubmitted ? (
+        {this.state.isFormSubmitted && isTourPicked ? (
           <CarOfferList
             offers={offers}
             handleOfferPick={this.handleOfferPick}
@@ -361,15 +366,17 @@ class App extends React.Component {
             offerName={offerName}
             offerPrice={offerPrice}
             handleSubmit={this.handleSubmit}
+            handleConfirmOffer={this.handleConfirmOffer}
+            ref={(el) => {
+              this.messagesEnd = el;
+            }}
           ></TourDetails>
         ) : null}
         <div
           ref={(el) => {
             this.messagesEnd = el;
           }}
-        >
-          {" "}
-        </div>
+        ></div>
       </div>
     );
   }

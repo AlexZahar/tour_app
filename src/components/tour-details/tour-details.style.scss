@@ -1,6 +1,7 @@
 .tour {
+  width: 100%;
   &__wrapper {
-    margin: 20px 30px;
+    margin: 20px auto;
     background-color: #39dbbb;
     border-radius: 4px;
     -webkit-box-shadow: 2px 7px 11px -3px rgba(0, 0, 0, 0.43);
@@ -14,7 +15,7 @@
     flex-direction: column;
     line-height: 26px;
     text-align: left;
-    max-width: 900px;
+    // max-width: 900px;
     justify-content: space-evenly;
     border-radius: 4px;
     word-wrap: break-word;
