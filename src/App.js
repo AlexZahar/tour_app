@@ -46,7 +46,6 @@ class App extends React.Component {
       address: "",
       offerName: "",
       offerPrice: "",
-      isOfferConfirmed: false,
     };
   }
 
@@ -111,7 +110,17 @@ class App extends React.Component {
     this.scrollToBottom();
   };
   handleConfirmOffer = () => {
-    console.log("Offer confirmed");
+    this.setState({
+      isLoading: true,
+    });
+    if (window.confirm(`Are you sure you want to proceed?`)) {
+      console.log("Offer confirmed");
+      this.setState({
+        isTourPicked: false,
+        isLoading: false,
+      });
+    }
+    alert(`Thank you for booking the tour! Have a wonderfull time in Munich:)`);
   };
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({ behavior: "smooth" });
@@ -367,9 +376,6 @@ class App extends React.Component {
             offerPrice={offerPrice}
             handleSubmit={this.handleSubmit}
             handleConfirmOffer={this.handleConfirmOffer}
-            ref={(el) => {
-              this.messagesEnd = el;
-            }}
           ></TourDetails>
         ) : null}
         <div

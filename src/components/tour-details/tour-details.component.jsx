@@ -16,6 +16,7 @@ export const TourDetails = ({
   address,
   offerPrice,
   offerName,
+  handleConfirmOffer,
 }) => (
   <div className="tour__wrapper">
     {console.log("NAME", offerName)}
@@ -43,6 +44,9 @@ export const TourDetails = ({
       <span className={offerPrice ? "" : "red"}>
         Price: <strong>{currencyFormat(offerPrice)}</strong>
       </span>
+      <button onClick={handleConfirmOffer} className="btn btn__confirm-offer">
+        Confirm offer
+      </button>
     </div>
   </div>
 );

@@ -78,8 +78,8 @@ a {
 
 .btn {
   font-size: 24px;
-  margin: 16px auto;
   background-color: #fcfcfc;
+  margin: 16px auto;
   border-radius: 5px;
   -webkit-box-shadow: 2px 7px 12px -8px rgba(0, 0, 0, 0.23);
   box-shadow: 2px 7px 12px -8px rgba(0, 0, 0, 0.23);
@@ -89,6 +89,12 @@ a {
 .btn__get-offer {
   border: 1px solid #07b363;
   color: #07b363;
+}
+.btn__confirm-offer {
+  font-size: 20px;
+  border: none;
+  width: 100%;
+  max-width: 230px;
 }
 button:hover {
   -webkit-box-shadow: 2px 7px 12px -1px rgba(0, 0, 0, 0.23);
